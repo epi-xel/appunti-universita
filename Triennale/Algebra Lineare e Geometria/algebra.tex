@@ -1,0 +1,714 @@
+\documentclass[a4paper]{report}
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{lipsum}
+\usepackage{geometry}
+\geometry{a4paper, top=3cm, bottom=3cm, left=2.5cm, right=2.5cm, heightrounded, bindingoffset=5mm}
+%\usepackage{imakeidx}
+\definecolor{shadecolor}{gray}{0.80}
+\newtheorem{teoremaDet}{Teorema}[section]
+\theoremstyle{remark}
+\newtheorem{nota1}{Nota}
+\newtheorem{oss}{Osservazioni}
+\theoremstyle{definition}
+\newtheorem{detProp}{Proprietà del determinante}
+\newtheorem{detDef}{Definizione}
+\newtheorem{es}{Esempio}
+\newcommand{\uvec}[2][3]{\underline{#2\mkern-#1mu}\mkern#1mu}
+%\makeindex
+\title{Algebra Lineare e Geometria Analitica}
+%
+\begin{document}
+%
+\maketitle
+%
+\tableofcontents
+%
+\pagenumbering{arabic}
+\pagestyle{headings}
+%
+\chapter{Spazi Vettoriali}
+\chapter{Associare Vettori a Punti}
+\chapter{Somma di Vettori}
+\chapter{Sottospazi Vettoriali}
+\chapter{Dipendenza Lineare e Basi}
+\chapter{Matrici}
+%
+\chapter{Il Determinante}
+%
+\section{Definizione e prime proprietà}
+\label{detProp}
+
+\begin{shaded}
+\begin{detDef}
+	Come oggetto matematico il determinante è una funzione  
+	\[
+	{det_n: \quad \{Matrice\quad n\times n \} \longmapsto \Re }
+	\]
+\end{detDef}
+\end{shaded}
+%
+Ci sono bijezioni tra:
+
+$\{Matrice \quad n\times n \} \iff \{(\vec{c_1}, \dots{} , \vec{c_n}),\quad \vec{c_i}$ = vettori colonna di $\Re^{n}\}$
+
+$\{Matrice \quad n\times n \} \iff \{(\vec{r_1}, \dots{} , \vec{r_n}),\quad \vec{r_i}$ = vettori riga di $\Re^{n}\}$
+
+\bigskip
+L'importanza del $det_n$ è che trova l'invertibilità della matrice:
+$det(M) \ne 0\quad sse$ $M$ è invertibile. Inoltre, c'è un algoritmo che calcola $det_n(M)$. Si noti che $det_n$ fornisce un modo di mostrare che una matrice è invertibile senza trovare la matrice inversa.
+\begin{teoremaDet}
+	Esiste una sola funzione
+	\[
+	f: (\Re^{n})^{n} = \{vettori colonna in \Re ^{n}\} \longmapsto \Re
+	\]
+	che soddisfa le proprietà $1,2,3,4$. Questa funzione è il determinante $det_n$.
+\end{teoremaDet}
+%
+\begin{detProp}
+($\vec{v}_1,\dots,\vec{v}_n$ denotano vettori colonna di $\Re^{n}$ e $\lambda \in \Re$.)
+
+\begin{enumerate}
+	\item $det_n(\uvec{v}_1,\dots,\uvec{v}_i+\uvec{w},\,\uvec{v}_{i+1}\dots{v}_n)\,=\, 			det_n(\uvec{v}_1,\dots,\uvec{v}_i+\dots,\uvec{v}_n)\,+ \, det_n(\uvec{v}_1,\dots,\uvec{w},\,\uvec{v}_n)\\
+	\forall i=1,\dots n$
+	\item $det_n(\uvec{v}_1,\dots,\lambda\,\uvec{v}_i,\,\uvec{v}_{i+1},\dots\uvec{v}_n)\,=\, \lambda\,det_n(\uvec{v}_1,\dots,\uvec{v}_i+\dots,\uvec{v}_n)\\
+	\forall i=1,\dots n$
+	\item $det_n(\uvec{v}_1,\dots,\uvec{w},\,\uvec{w},\,\uvec{v}_{i+2},\dots\uvec{v}_n)\,=\,0\\
+	\forall i=1,\dots n$
+	\item $det_n(Id_n)\,=\,1$,
+	dove\quad $Id\,=$
+	$
+	\begin{pmatrix}
+	1 & 0 & \dots & 0\\
+	0 & 1 & \dots & 0\\
+	\vdots & 0 & \dots & 0\\
+	\vdots & \vdots & \ddots & 0\\
+	0 & 0 & \dots & 1
+	\end{pmatrix}
+	$
+\end{enumerate}
+\end{detProp}
+%
+\begin{nota1}
+%\begin{itemize}
+	Le proprietà {\bfseries 1} e {\bfseries 2} sono la {\itshape multilinearità di $n$}\\
+	La proprietà {\bfseries 3} è chiamata {\itshape proprietà alternante}; tale proprietà per una funzione multilineare in $n$ è equivalente a:\\
+	$det_n(\vec{v}_1,\dots,\vec{v}_i+,\,\vec{v}_{i+1}\dots{v}_n)\,=\,-\,det_n(\vec{v}_1,\dots,\vec{v}_{i+1}+,\,\vec{v}_i\dots{v}_n)$
+%\end{itemize}
+\end{nota1}
+
+\begin{proof}
+\label{dimDet2}
+	(del teorema precedente del caso speciale di $n\,=\,2$). Supponiamo che $f$ soddisfi {\bfseries 1}, {\bfseries 2}, {\bfseries 3}, {\bfseries 4}. Calcoliamo $f\,\bigl(
+	\begin{smallmatrix}
+		a & b \\
+		c & d
+	\end{smallmatrix}
+	\bigr)$
+	
+	\medskip
+	% inizia la dimostrazione
+	$
+%	\begin{split}
+	f
+	\begin{pmatrix}
+		a & b\\
+		c & d
+	\end{pmatrix}
+	= \,f
+	\begin{pmatrix}
+		\begin{pmatrix}
+			a\\
+			c
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			b\\
+			d
+		\end{pmatrix}
+	\end{pmatrix}
+	= \,f
+	\begin{pmatrix}
+		\begin{pmatrix}
+			a\\
+			0
+		\end{pmatrix}
+		+
+		\begin{pmatrix}
+			0\\
+			c
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			d\\
+			c
+		\end{pmatrix}
+	\end{pmatrix}
+	\stackrel{(1)}{=}\,f
+	\begin{pmatrix}
+		\begin{pmatrix}
+			a\\
+			0
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			b\\
+			d
+		\end{pmatrix}
+	\end{pmatrix}
+	+\,f
+	\begin{pmatrix}
+		\begin{pmatrix}
+			0\\
+			c
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			b\\
+			d
+		\end{pmatrix}
+	\end{pmatrix}\\
+	=\,f
+	\begin{pmatrix}
+		a
+		\begin{pmatrix}
+			1\\
+			0
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			b\\
+			d
+		\end{pmatrix}
+	\end{pmatrix}
+	+\,f
+	\begin{pmatrix}
+		c
+		\begin{pmatrix}
+			0\\
+			1
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			b\\
+			d
+		\end{pmatrix}
+	\end{pmatrix}
+	\stackrel{(2)}{=}\,
+	a\,f
+	\begin{pmatrix}
+		\begin{pmatrix}
+			1\\
+			0
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			b\\
+			d
+		\end{pmatrix}
+	\end{pmatrix}
+	+ c\,f
+	\begin{pmatrix}
+		\begin{pmatrix}
+			0\\
+			1
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			b\\
+			d
+		\end{pmatrix}
+	\end{pmatrix}\\
+	\stackrel{(1)}{=}\,a
+	\begin{bmatrix}
+		f
+		\begin{pmatrix}
+			\begin{pmatrix}
+				1\\
+				0
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+				b\\
+				0
+			\end{pmatrix}
+		\end{pmatrix}
+		+\,f
+		\begin{pmatrix}
+			\begin{pmatrix}
+				1\\
+				0
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+				0\\
+				d
+			\end{pmatrix}
+		\end{pmatrix}
+	\end{bmatrix}
+	+\,c
+	\begin{bmatrix}
+		f
+		\begin{pmatrix}
+			\begin{pmatrix}
+				0\\
+				1
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+				b\\
+				0
+			\end{pmatrix}
+			\end{pmatrix}
+		+\,f
+		\begin{pmatrix}
+			\begin{pmatrix}
+				0\\
+				1
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+				0\\
+				d
+			\end{pmatrix}
+		\end{pmatrix}
+	\end{bmatrix}\\
+	\stackrel{(2)}{=}\,a
+	\begin{bmatrix}
+		b\,\underbrace {f
+		\begin{pmatrix}
+			\begin{pmatrix}
+			1\\
+			0
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+			1\\
+			0
+			\end{pmatrix}
+		\end{pmatrix}}_
+		{\stackrel{(2)}{=}\,0}
+		+\,d\,f
+		\begin{pmatrix}
+			\begin{pmatrix}
+				1\\
+				0
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+				0\\
+				1
+			\end{pmatrix}
+		\end{pmatrix}
+		\end{bmatrix}+\,c
+		\begin{bmatrix}
+		b\,f
+		\begin{pmatrix}
+			\begin{pmatrix}
+				0\\
+				1
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+				1\\
+				0
+			\end{pmatrix}
+		\end{pmatrix}
+		+\,d\,f\underbrace{
+		\begin{pmatrix}
+			\begin{pmatrix}
+			0\\
+			1
+			\end{pmatrix}
+			,
+			\begin{pmatrix}
+			0\\
+			1
+			\end{pmatrix}
+		\end{pmatrix}}_
+		{\stackrel{(2)}{=}\,0}
+	\end{bmatrix}\\
+	= \,a\,d\,f
+	\begin{pmatrix}
+		\begin{pmatrix}
+			1\\
+			0
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+			0\\
+			1
+		\end{pmatrix}
+	\end{pmatrix}
+	+ \,c\,b\underbrace{f
+	\begin{pmatrix}
+		\begin{pmatrix}
+		0\\
+		1
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+		1\\
+		0
+		\end{pmatrix}
+	\end{pmatrix}}_
+	{\stackrel{(3)}{=}-f
+	\begin{pmatrix}
+		\begin{pmatrix}
+		1\\
+		0
+		\end{pmatrix}
+		,
+		\begin{pmatrix}
+		0\\
+		1
+		\end{pmatrix}
+	\end{pmatrix}}
+	\stackrel{(4)}{=}\,ad\,-\,cb
+%	\end{split}
+	$
+\end{proof}
+\bigskip
+\section{Teorema di Laplace}
+\label{laplace}
+
+\begin{shaded}
+	\begin{teoremaDet}[di Laplace]
+	\label{Laplace}
+		Sia A\,=\,$(a_{ij})$ una matrice $n \times n$, e sia $(a_{k1},\,a_{k2},\dots,a_{kn})$ la sua $k$-esima riga. Allora abbiamo la seguente uguaglianza:
+		\[
+		det(A)\,=\,\sum_{j=1}^n(-1)^{k+j}\,\,a_{kj}\,\,det(a_{kj})
+		\]
+		dove $A_{kj}\,=\,
+		\begin{pmatrix}
+		a_{11} & a_{11} & \dots & a_{1n}\\
+		a_{21} & \dots & \dots & a_{2n}\\
+		\vdots &  &  & \vdots\\
+		a_{k1} & \dots & a_{kj} & a_{kn}\\
+		\vdots &  &  & \vdots\\
+		a_{n1} & \dots & \dots & a_{1n}
+		\end{pmatrix}
+		$
+	\end{teoremaDet}
+\end{shaded}
+%
+\begin{oss}
+		$^{(1)}$La formula dipende dalla riga $k$, ma il $det(a)$ no.
+		
+		$^{(2)}$C'è uno sviluppo simile del determinante attraverso una $h$-esima colonna invece della $k$-esima riga:
+		\[
+		det(A)\,=\,\sum_{i=1}^n(-1)^{i+h}\,\,a_{ih}\,\,det(a_{ih})
+		\]
+		
+		$^{(3)}$Queste sono definizioni ricorsive, ciò significa che il determinante di una matrice $n\times n$ è espresso in funzione del determinante della matrice $(n-1)\times(n-1)$
+\end{oss}
+\begin{es}
+	Dato $det(a)\,=\,a$, si scriva la formula per il determinante di una generica matrice $2\times 2$ e si controlli che coincida con quello derivato nella dimostrazione \ref{dimDet2}.
+	
+	Sia $A\,=\,\bigl(
+	\begin{smallmatrix}
+	a & b\\
+	c & d
+	\end{smallmatrix}
+	\bigr)$, con la formula di Laplace abbiamo, sviluppando secondo la prima riga,
+	
+	$det
+	\begin{pmatrix}
+	a & b\\
+	c & d
+	\end{pmatrix}\,=\,(-1)^{1+1}\,a\,det(d)\,+\,(-1)^{1+2}\,b\,det(c)\,=\,ad-bc$
+\end{es}
+\begin{es}
+	Si calcoli il determinante si $A\,=\,
+	\begin{pmatrix}
+		2 & 0 & 1\\
+		1 & 1 & 0\\
+		-1 & 3 & 2
+	\end{pmatrix}$
+	
+	Sviluppiamo di nuovo il determinante secondo una riga. Si noti che è sempre conveniente scegliere una riga con il più alto numero di zeri. Perciò scegliamo o la prima o la seconda riga. Prendiamo la seconda:
+	
+	$det\,\begin{pmatrix}
+		2 & 0 & 1\\
+		1 & 1 & 0\\
+		-1 & 3 & 2
+	\end{pmatrix}
+	\,=\,(-1)^{2+1}\,1\,det
+	\begin{pmatrix}
+		0 & 1\\
+		3 & 2\\
+	\end{pmatrix}
+	\,+\,(-1)^{2+2}\,1\,det
+	\begin{pmatrix}
+		2 & 1\\
+		-1 & 2\\
+	\end{pmatrix}\\
+	=\,-(-3)+4+1=8$
+\end{es}
+%
+\section{Altre proprietà e teorema di Binet}
+\begin{detProp}
+	La funzione determinante, oltre alle proprietà definite (vedi \ref{detProp}):
+	\begin{itemize}
+		\item Multilinearità in $n$
+		\item Alternanza
+		\item $det(Id)=1$
+	\end{itemize}
+	ha le seguenti:
+	\begin{enumerate}
+		\item $det(A)\,=\,det(^{t}A)$, dove $^{t}A$ è la matrice trasposta di A.
+		\item Se A è una matrice {\itshape triangolare}, cioè
+	
+			$A\,=\,
+			\begin{pmatrix}
+				a_{11} & \dots & 0\\
+				\vdots & \ddots & \vdots\\
+				* & \dots & a_{nn}
+			\end{pmatrix}\quad$
+			o
+			$\quad A\,=\,
+			\begin{pmatrix}
+			a_{11} & \dots & *\\
+			\vdots & \ddots & \vdots\\
+			0 & \dots & a_{nn}
+			\end{pmatrix}$,
+			
+			allora $det(A)\,=\,a_{11}\,a_{22}\dots a_{nn}$
+			\begin{proof}
+				Per induzione sull'ordine $n$ della matrice:
+				
+				Base: $n=2$, $det\,\bigr(
+				\begin{smallmatrix}
+				a_{11} & 0\\
+				a_{21} & a_{22}
+				\end{smallmatrix}
+				\bigl)\,=\,a_{11}\,a_{22}$ (vedi \ref{detProp} e \ref{laplace})
+				
+				Passo induttivo: supponiamo che l'asserzione sia valida per ogni matrice fino all'ordine $n-1$.
+				
+				Per la formula di Laplace (\ref{laplace}):
+				
+				$det\,
+				\begin{pmatrix}
+				a_{11} & \dots & \dots & 0\\
+				\vdots & a_{22} & & \vdots\\
+				\vdots & & \ddots & \vdots\\
+				* & \dots & \dots & a_{nn}
+				\end{pmatrix}
+				\,=\,a_{11}\,det\,
+				\begin{pmatrix}
+				a_{22} & \dots & 0\\
+				\vdots & \ddots & \vdots\\
+				* & \dots & a_{nn}
+				\end{pmatrix}$
+				
+				${\stackrel{per\,ipotesi\,induttiva}{=}}\,a_{11}\,(a_{22}\dots a_{nn})$
+				
+			\end{proof}
+		\item In generale $det\,(A+B)\,\ne\,det(A)\,+\,det(B)$. Comunque, 
+			\begin{teoremaDet}[di Binet]
+				$det(A\,B)\,=\,det(A)\,det(B)$
+			\end{teoremaDet}
+		\item È conseguenza immediata del teorema di Binet:
+			\begin{teoremaDet}[corollario]
+				Se A è invertibile, allora $det(A^{-1})=\dfrac{1}{det(A)}$
+			\end{teoremaDet}
+			\begin{proof}
+				Applichiamo il teorema di Binet a $Id_{n} = A^{-1}A:$
+				\[
+				1=det(Id_{n})=det(A^{-1}A){\stackrel{Binet}{=}}det(A^{-1}detA)
+				\]
+			\end{proof}
+		\item La relazione tra operazioni elementari e il determinante richiama le tre operazioni elementari sulle righe e 	sulla matrice:
+			\begin{enumerate}
+				\item [{\itshape a.}] scambiare le due righe
+				\item [{\itshape b.}] moltiplicare una riga per $\lambda\ne0$
+				\item [{\itshape c.}] sostituire $r_{i}$ con $r_{i}+\alpha r_{j}$.
+			\end{enumerate}
+			Cosa succede al determinante dopo che applichiamo un'operazione elementare?
+			\begin{itemize}
+				\item {\itshape Operazione a.} Il determinante è moltiplicato per $-1$. Per vedere questo, si noti che scambiare $r_{i}$ e $r_{j}$ ($j>i$) è lo stesso che fare $j-i-1$ scambi {\em consecutivi} su $r_{i}$ e $j-i-1$ scambi {\em consecutivi} su $r_{j}$. Quindi scambiamo {\em consecutivamente} un numero dispari di volte. Ora applichiamo l' ``equivalente'' proprietà alternante del determinante (vedi \ref{detProp}).
+				\item {\itshape Operazione b.} Il determinante resta invariato:
+				
+				$det(\dots,r_{i}+\alpha r_{j},\dots)\,=\,det(\dots,r_i,\dots)+\alpha\,det(\dots,r_j,\dots,r_j,\dots)$
+				
+				Si noti che:
+				
+				$det(\dots,r_{i}+ r_{j},\dots)\,=\,(-1)^{j-i-1}\,\underbrace{det(\dots,r_j,r_j,\dots)}_{=0}$ per l'operazione {\itshape a}. 
+				
+				Ma $det(\dots,r_j,r_j,\dots)=0$ per l'alternanza di {\itshape c.} (vedi \ref{detProp}).
+				
+				Così abbiamo provato che $det(\dots,r_{i}+\alpha r_{j},\dots)\,=\,det(A)$
+			\end{itemize}
+	\end{enumerate}
+\end{detProp}
+%
+\section{Determinante e sistemi di equazioni lineari}
+%
+Sia $A\uvec{x}=\uvec{b}$ un sistema di equazioni lineari con $A$ una matrice quadrata (vedi 6.4). Allora:
+\begin{shaded}
+\begin{teoremaDet}
+	\begin{enumerate}
+		\item Il sistema ammette una soluzione sse $ det(A)\ne0 $
+		\item In quel caso la soluzione $ (c_1,\dots,c_n) $ è unica e tale che 
+		\[
+		c_i\,=\,\dfrac{det(A_1\dots|\uvec{b}|\dots A_n)}{det(A)}
+		\]
+		dove $ A_j $ è il $ j $-esimo vettore colonna di $ A $.
+	\end{enumerate}
+\end{teoremaDet}
+\end{shaded}
+\begin{es}
+	Controlliamo se $
+	\begin{cases}
+		2x+z-2=0\\
+		-y-3z+2=0\\
+		-x+y-z=0
+	\end{cases}
+	$ ha un'unica soluzione e in quel caso troviamola.
+	
+	La matrice $ A $ è $
+	\begin{pmatrix}
+		2 & 0 & 1\\
+		0 & -1 & 3\\
+		-1 & 1 & -1
+	\end{pmatrix}$
+	e $ \uvec b\,=\,$
+	$\begin{pmatrix}
+		2\\-2\\0
+	\end{pmatrix}$
+	
+	$ det(A)\,=\,2\,det $
+	$\begin{pmatrix}
+		-1 & -3\\
+		1 & -1
+	\end{pmatrix}$
+	$\,+\, det$
+	$\begin{pmatrix}
+		0 & -1\\
+		-1 & 1
+	\end{pmatrix}$
+	$ \,=\,2(1+3)+(-1)=7\, \Rightarrow\exists !$  soluzione
+	
+	Per il teorema precedente, possiamo esprimere la soluzione come $\uvec{c}=(c_1,c_2,c_3)$ con:
+	
+	$ c1\,=\,\dfrac{det
+	\begin{pmatrix}
+		2 & 0 & 1\\
+		-2 & -1 & -3\\
+		0 & 1 & -1
+	\end{pmatrix}}{7} 
+	\,=\,\dfrac{1}{7}\Bigl( 2\,det
+	\begin{pmatrix}
+		-1 & -3\\
+		1 & -1
+	\end{pmatrix}
+	\,+\,det
+	\begin{pmatrix}
+		-2 & -1\\
+		0 & 1
+	\end{pmatrix}\Bigr)
+	= \dfrac{1}{7}(8-2)=\dfrac{6}{7}$
+	
+	$ c1\,=\,\dfrac{det
+	\begin{pmatrix}
+		2 & 2 & 1\\
+		0 & -2 & -3\\
+		-1 & 1 & -1
+	\end{pmatrix}}{7} 
+	\,=\,\dfrac{1}{7}\Bigl( 2\,det
+	\begin{pmatrix}
+		-2 & -3\\
+		0 & -1
+	\end{pmatrix}
+	\,-\,det
+	\begin{pmatrix}
+		2 & 1\\
+		-2 & -3
+	\end{pmatrix}\Bigr)
+	= \dfrac{1}{7}(4+4)=\dfrac{8}{7}$
+	
+	$ c1\,=\,\dfrac{det
+	\begin{pmatrix}
+		2 & 0 & 2\\
+		0 & -1 & -2\\
+		-1 & 1 & 0
+	\end{pmatrix}}{7} 
+	\,=\,\dfrac{1}{7}\Bigl( 2\,det
+	\begin{pmatrix}
+		-1 & 2\\
+		1 & 0
+	\end{pmatrix}
+	\,+\,det
+	\begin{pmatrix}
+		0 & -1\\
+		-1 & 1
+	\end{pmatrix}\Bigr)
+	= \dfrac{1}{7}(4-2)=\dfrac{2}{7}$
+\end{es}
+%
+\section{Determinante e rango di una matrice}
+Il determinante è definito solo per le matrici quadrate. Comunque, è possibile usare il concetto di determinante per ottenere informazioni riguardo qualunque matruce.
+\begin{detDef}
+	Sia $ A $ una matrice. Una sottomatrice di $ A $ è una matrice ottenuta togliendo alcune righe e alcune colonne da $ A $.
+\end{detDef}
+\begin{detDef}
+	Un \textbf{minore} di ordine $ k $ di una matrice $ A $ è il determinante di una sottomatrice quadrata di $ A $ di ordine $ k $.
+\end{detDef}
+\begin{es}
+	Sia $ A $ la matrice $ 
+	\begin{pmatrix}
+		3 & 0 & -1 & 2\\
+		1 & 2 & 2 & 1\\
+		0 & -1 & -1 & 2
+	\end{pmatrix} $.
+	Una sottomatrice quadrata di ordine 2 è $ B= 
+	\begin{pmatrix}
+		3&-1\\
+		0&-1
+	\end{pmatrix}$.
+	Il suo minore associato è $ det(B)=-3 $.
+\end{es}
+\begin{teoremaDet}
+	Sia $A$ una qualunque matrice. Allora il rango di $A$ è uguale al più grande ordine di minori non nulli di $A$.
+\end{teoremaDet}
+\begin{es}
+	Consideriamo la matrice $ A $ scritta sopra: è una matrice $ 3 \times 4 $, perciò $ rank(A) \geq 2 $ per il teorema.
+	
+	Ci sono due possibilità:
+	\begin{enumerate}
+		\item $ \exists $ minore non nullo di ordine 3 di $ A $
+		\item Tutte le matrici di ordine 3 di $ A $ hanno $ det=0 $
+	\end{enumerate}
+
+	In $ A $ ci sono quattro sottomatrici quadrate di ordine 3. Comunque non è necessario controllare il determinante di tutte queste: per il teorema (o anche solo osservandole), abbiamo che le colonne $ 
+	\begin{pmatrix}
+		3\\
+		1\\
+		0
+	\end{pmatrix} $ e $
+	\begin{pmatrix}
+		-1\\
+		2\\
+		-1
+	\end{pmatrix} $ 
+	sono linearmente indipendenti, dunque dobbiamo controllare se uno dei vettori colonna rimanenti sia linearmente indipendenti con queste. Questo significa calcolare solo due minori invece di quattro.
+	
+	
+	$ 
+	\begin{pmatrix}
+		3&0&-1\\
+		1&2&2\\
+		0&-1&-1
+	\end{pmatrix}
+	=1\ne 0$, quindi $ rank(A)=3 $.
+	
+\end{es}
+%
+\end{document}
+

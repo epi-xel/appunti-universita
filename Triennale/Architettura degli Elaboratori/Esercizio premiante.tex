@@ -1,0 +1,100 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{xcolor}
+\usepackage{framed}
+\usepackage{lipsum}
+\usepackage{geometry}
+\usepackage{graphicx}
+\date{Appello di Giugno 2020}
+\author{Elisa Pioldi\\mat. 856591}
+\geometry{a4paper, top=3cm, bottom=3cm, left=2.5cm, right=2.5cm, heightrounded, bindingoffset=5mm}
+\definecolor{shadecolor}{gray}{0.80}
+\title{\textbf{ESERCIZIO PREMIANTE\\Architettura degli Elaboratori}}
+%
+\begin{document}
+%
+\maketitle
+%
+\section{Esecuzione in QtSpim}
+Il codice proposto è il seguente:
+\begin{verbatim}
+main:
+beq $0,$0, realMain
+realMain:
+jr $31
+\end{verbatim}
+e viene eseguito in QtSpim senza particolari problemi. Le istruzioni vengono assemblate in questo modo:
+\begin{verbatim}
+[00400024] 10000001  beq $0, $0, 4 [realMain-0x00400024]
+[00400028] 03e00008  jr $31                   ; 4: jr $31 
+\end{verbatim}
+Si nota pertanto che nel momento in cui la branch viene effettuata, l'offset risulta pari a \texttt{4}, dovendo saltare all'istruzione successiva etichettata da {\itshape RealMain}.
+
+L'esecuzione delle istruzioni preliminari nell'\texttt{User Text Segment} di SPIM, non facenti parte nel nostro codice effettivo, assicura che il programma nel momento dell'istruzione \texttt{jr} salti al registro \texttt{\$31}, corrispondente al {\itshape register address}, e con l'esecuzione dell'istruzione riferita dall'indirizzo contenuto in \texttt{\$ra}, il {\itshape register address}, si conclude per un'opportuna syscall finale.
+\begin{verbatim}
+[00400018] 00000000  nop                      ; 189: nop 
+[0040001c] 3402000a  ori $2, $0, 10           ; 191: li $v0 10 
+[00400020] 0000000c  syscall                  ; 192: syscall # syscall 10 (exit) 
+\end{verbatim}
+Durante l'esecuzione il ramo branch viene effettuato e il programma si conclude in QtSpim.
+%
+\section{Esecuzione in Logisim}
+Dopo aver salvato le istruzioni assemblate in un file di testo con estensione \texttt{.img}:
+\begin{verbatim}
+v2.0 raw
+10000001
+03e00008
+\end{verbatim}
+Le carichiamo nella memoria del circuito simulazione del Datapath Muticiclo (figura \ref{fig1}).
+
+Procedendo quindi con l'esecuzione delle istruzioni notiamo subito che il comportamento si rivela inatteso.
+Per prima cosa mancano le istruzione dell'\texttt{User Text Segment}, quindi il programma continua a eseguire le istruzioni anche nulle indefinitamente. Inoltre il {\itshape register address} non contiene il valore di default di SPIM che fa eseguire la conclusione del programma, ma il contenuto è nullo.
+
+Ci si aspetterebbe quindi che dopo l'istruzione jr venga eseguta l'istruzione contenuta all'indirizzo segnato dal {\itshape register address}, l'istruzione di indirizzo nullo, ovvero la {\itshape branch}. Ciò che si verificherebbe sarebbe un ciclo infinito.
+
+Avanzando con i cicli di clock, osserviamo dunque che il {\itshape program counter} viene incrementato, ma controllando l'{\itshape instruction register} l'istruzione jr codificata come \texttt{03e00008} non viene mai eseguita, passando dall'istruzione di {\itshape branch} a quelle nulle successive a \texttt{jr}, e così via (figura \ref{fig2}).
+In un primo momento sembra pertanto che durante la {\itshape branch} occorra un problema.
+
+Provando quindi a caricare in Logisim alcune istruzioni assemblate simili, ma tali che con la {\itshape branch} non venga effettuato l'offset
+\begin{verbatim}
+main:
+li $t0, 2
+beq $t0, $0, realMain
+realMain:
+jr $31
+\end{verbatim}
+si vede che il programma non presenta problemi, e l'istruzione \texttt{jr} viene effettuata.
+
+Se ne deduce quindi che il problema risiede nella consecutività dell'istruzione \texttt{jr} quando viene valutato il ramo della {\itshape branch}.
+Osservando attentamente il {\itshape program counter} si nota che, come dovrebbe essere, ad ogni {\itshape fetch} viene incrementato di \texttt{4}. La discordanza va ricercata nell'istruzione assemblata da SPIM di {\itshape branch} presenta un offset di \texttt{4} che va a sommarsi al già incrementato {\itshape program counter}, causando quindi un salto di un'istruzione, in questi caso la \texttt{jr}. Se il ramo della {\itshape branch} non venisse valutato, allora il {\itshape program counter} verrebbe incrementato solo di \texttt{4} e inoltre l'istruzione \texttt{jr} verrebbe eseguita.
+\begin{figure}
+\centering
+\caption{Istruzioni caricate in Logisim}
+\includegraphics[width=.8\textwidth, height=.6\textheight, keepaspectratio]{ram.jpg}
+\label{fig1}
+\end{figure}
+\begin{figure}
+\centering
+\caption{Instruction Register}
+\includegraphics[width=.8\textwidth, height=.6\textheight, keepaspectratio]{instre.jpg}
+\label{fig2}
+\end{figure}
+%
+\section{Correzione delle istruzioni e confronto con SPIM}
+Per correggere le istruzioni assemblate, dal momento che i problemi sono presenti nel ramo della {\itshape branch}, è necessario quindi operare sull'offset relativo a questo: tenendo presente che il {\itshape program counter} verrà incrementato di \texttt{4}, per passare all'istruzione successiva l'offset dovrà essere di \texttt{0}.
+
+I byte modificati risulteranno quindi come i seguenti:
+\begin{verbatim}
+10000000
+03e00008
+\end{verbatim}
+
+Inserendoli come immagine nella memoria del circuito, si vedrà che non ci saranno problemi, l'istruzione \texttt{jr} verrà eseguita e avrà luogo un ciclo infinito.
+
+Resta un'ultima osservazione da fare al riguardo: il simulatore QtSpim nell'assemblare le istruzioni sembra non tenere conto dell'incremento del {\itshape program counter}, in quanto l'istruzione viene assemblata secondo un offset di \texttt{4} e non di \texttt{0}.
+
+\end{document}
